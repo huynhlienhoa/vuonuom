@@ -61,7 +61,6 @@
                 position: absolute;
                 animation:  cloud_move_3 40s infinite, cloud_opacity_1 10s 2s infinite;
             }
-
             .tree_screen_1 {
                 background-size:     cover;                      /* <------ */
                 background-repeat:   no-repeat;
@@ -81,8 +80,34 @@
                 height: 200px;
                 width: 600px;
                 bottom: -20px;
+                right: 0px;
+                position: absolute;
+            }
+            .tree_screen_3 {
+                background-size:     cover;                      /* <------ */
+                background-repeat:   no-repeat;
+                background-position: center center;              /* optional, center the image */
+                background-image: url('./axsets/image/tree3.png');
+                height: 200px;
+                width: 600px;
+                bottom: 100px;
+                right: 0px;
+                position: absolute;
+            }
+            .tree_screen_4 {
+                background-size:     cover;                      /* <------ */
+                background-repeat:   no-repeat;
+                background-position: center center;              /* optional, center the image */
+                background-image: url('./axsets/image/tree4.png');
+                height: 200px;
+                width: 600px;
+                bottom: -20px;
                 left: 0px;
                 position: absolute;
+            }
+            .background_site{
+                background: #b2ffc06e;
+                color: black;
             }
 
             @keyframes cloud_move_1 {
@@ -105,7 +130,15 @@
                 50% {opacity: 0;}
                 100% {opacity: 1;}
             }
-            </style>
+
+            #value_nhietdo::before {
+                content: "Nhiệt độ: "
+            }
+
+            #value_doam::before {
+                content: "Độ ẩm: "
+            }
+        </style>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
         <link rel="stylesheet" href="./css/nouislider.css" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js" integrity="sha512-UOJe4paV6hYWBnS0c9GnIRH8PLm2nFK22uhfAvsTIqd3uwnWsVri1OPn5fJYdLtGY3wB11LGHJ4yPU1WFJeBYQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -119,6 +152,8 @@
             <div class="cloud_screen_3 " ></div>
             <div class="tree_screen_1"></div>
             <div class="tree_screen_2"></div>
+            <div class="tree_screen_3"></div>
+            <div class="tree_screen_4"></div>
         </div>
         <div class="flex flex-col h-screen space-y-10 p-8">
             <div class="flex flex-row basis-1/2 space-x-8">
@@ -130,7 +165,7 @@
                 <div class="basis-1/3 max-w-xs border-2 text-center shadow-2xl flex flex-col rounded-xl">
                     <h2 class="text-2xl p-4">Nhiệt độ</h2>
                     <span class="text-6xl material-symbols-outlined w-full">
-                        wb_sunny
+                        dew_point
                         </span>
                             <div class="text-4xl">
                                 <span id="current_temparate">36</span>
@@ -148,10 +183,13 @@
                         </div>
                 </div>
             </div>
+
+
+
             <div class="flex flex-row basis-1/2 space-x-10">
-                <div class="basis-1/3 border-2 text-xl shadow-2xl p-4 rounded-xl">
+                <div class="basis-1/3 border-2 text-xl shadow-2xl p-4 rounded-xl background_site ">
                     <div class="text-xl text-center "><h2 class="text-2xl">Điều khiển</h2></div>
-                    <div class="ml-4 mt-8">
+                    <div class="p-4">
                         <div class="form-check form-switch ">
                             <input class="form-check-input" type="checkbox" role="switch" id="btn_light" checked>
                             <label class="form-check-label" for="btn_light">Đèn</label>
@@ -160,12 +198,13 @@
                             <input class="form-check-input" type="checkbox" role="switch" id="btn_water" checked>
                             <label class="form-check-label" for="btn_water">Tưới nước</label>
                         </div>
-                        
-                            <!-- <input type="range" class="range-slider-input-left" tabindex="0" max="100" min="0" step="1">
-                            <input type="range" class="range-slider-input-right" tabindex="0" max="100" min="0" step="1"> -->
                     </div>
+
+
+                    <div>
+                        <span id="value_nhietdo"></span>
                     <div id="slider_nhietdo"></div>
-                        <div id="RangeSlider" class="range-slider">
+                        <!-- <div id="RangeSlider" class="range-slider">
                             <div>
                                 <div class="range-slider-val-left"></div>
                                 <div class="range-slider-val-right"></div>
@@ -182,11 +221,38 @@
                                     <span class="range-slider-tooltip-text"></span>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
+                    </div>
 
+                    <div>
+                        <span id="value_doam"></span>
+                    <div id="slider_doam"></div>
+                    <!-- <div id="slider_nhietdo" class="range-slider"> -->
+                        <!-- <div>
+                            <div class="range-slider-val-left"></div>
+                            <div class="range-slider-val-right"></div>
+                            <div class="range-slider-val-range"></div>
+                    
+                            <span class="range-slider-handle range-slider-handle-left"></span>
+                            <span class="range-slider-handle range-slider-handle-right"></span>
+                    
+                            <div class="range-slider-tooltip range-slider-tooltip-left">
+                                <span class="range-slider-tooltip-text"></span>
+                            </div>
+                    
+                            <div class="range-slider-tooltip range-slider-tooltip-right">
+                                <span class="range-slider-tooltip-text"></span>
+                            </div>
+                        </div> -->
+                    <!-- </div> -->
+                    </div>
+                    
                 </div>
-                <div class="basis-2/3 text-2xl text-center border-2 shadow-2xl rounded-xl">
-                    Đồ thị
+
+
+
+                <div class="basis-2/3 text-2xl text-center border-2 shadow-2xl rounded-xl background_site">
+                    <p class="mt-4">Đồ thị</P>
                     
                 
                 </div>
@@ -195,17 +261,45 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script>
-        var slider = document.getElementById('slider_nhietdo');
 
-        noUiSlider.create(slider, {
-            start: [20, 80],
+        // Khoi tao slider
+        var slider_nhietdo = document.getElementById('slider_nhietdo');
+
+        noUiSlider.create(slider_nhietdo, {
+            start: [20, 25, 28, 33],
+            connect: true,
+            step: 5,
+            range: {
+                'min': [0],
+                'max': [50],
+                // tooltips:true
+            }
+        });
+
+        var slider_doam = document.getElementById('slider_doam');
+
+        noUiSlider.create(slider_doam, {
+            start: [40, 45, 60, 65],
+            step:5,
             connect: true,
             range: {
-                'min': 0,
-                'max': 100
-            },
-            // tooltips:[true]
+                'min': [20],
+                'max': [80],
+                // tooltips:true
+            }
         });
+
+        // Hien thi
+        var value_nhietdo = document.getElementById("value_nhietdo");
+        slider_nhietdo.noUiSlider.on('update', function (values, handle) {
+            value_nhietdo.innerHTML = values.map(d=> String(+d)).join('-');
+        });
+        var value_doam = document.getElementById("value_doam");
+        slider_doam.noUiSlider.on('update', function (values, handle) {
+            value_doam.innerHTML = values.map(d=>String(+d)).join('-');
+        });
+
+
     </script>
     </body>
 </html>

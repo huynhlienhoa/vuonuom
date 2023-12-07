@@ -85,7 +85,7 @@
    height: 18px;
  }
  .noUi-horizontal .noUi-handle {
-   width: 20px;
+   width: 14px;
    height: 28px;
    right: -10px;
    top: -6px;
@@ -114,6 +114,7 @@
  }
  .noUi-connects {
    border-radius: 3px;
+   background-color: red;
  }
  .noUi-connect {
    background: #5c5c6b;
@@ -146,11 +147,11 @@
    height: 14px;
    width: 1px;
    background: #E8E7E6;
-   left: 14px;
+   left: 2px;
    top: 6px;
  }
  .noUi-handle:after {
-   left: 17px;
+   left: 10px;
  }
  .noUi-vertical .noUi-handle:before,
  .noUi-vertical .noUi-handle:after {

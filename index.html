@@ -11,6 +11,12 @@
         <script src="https://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
         <link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
         <style>
+            .c-1-color { background: red; }
+            .c-2-color { background: yellow; }
+            .c-3-color { background: green; }
+            .c-4-color { background: blue; }
+            .c-5-color { background: purple; }
+
             .material-symbols-outlined {
               font-variation-settings:
               'FILL' 0,
@@ -264,7 +270,6 @@
 
         // Khoi tao slider
         var slider_nhietdo = document.getElementById('slider_nhietdo');
-
         noUiSlider.create(slider_nhietdo, {
             start: [20, 25, 28, 33],
             connect: true,
@@ -274,7 +279,17 @@
                 'max': [50],
                 // tooltips:true
             }
+            
         });
+        // function doi_mau_slider(slider_nhietdo) {
+        //     var connect = slider.querySelectorAll('.noUi-handle');
+        //     var classes = ['c-1-color', 'c-2-color', 'c-3-color', 'c-4-color', 'c-5-color'];
+
+        //     for (var i = 0; i < connect.length; i++) {
+        //         connect[i].classList.add(classes[i]);
+        //     }
+        // };
+
 
         var slider_doam = document.getElementById('slider_doam');
 
@@ -298,8 +313,23 @@
         slider_doam.noUiSlider.on('update', function (values, handle) {
             value_doam.innerHTML = values.map(d=>String(+d)).join('-');
         });
+        const divElements = document.querySelectorAll('.noUi-connect');
+        if (divElements.length >= 2){
+            //thanh nhiệt độ 
+            divElements[0].style.backgroundColor = 'yellow'; 
+            divElements[1].style.backgroundColor = 'green'; 
+            divElements[2].style.backgroundColor = 'yellow'; 
 
-
+            //thanh độ ẩm
+            divElements[3].style.backgroundColor = 'yellow'; 
+            divElements[4].style.backgroundColor = 'green'; 
+            divElements[5].style.backgroundColor = 'yellow'; 
+        } 
+        else {
+            console.log('Please double check');
+         }
     </script>
+       
+   
     </body>
 </html>

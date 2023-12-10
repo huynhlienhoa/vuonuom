@@ -4,7 +4,7 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebas
 import { getAuth, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js'
 
 // Add Firebase products that you want to use
-import { getDatabase, ref, get, set, child, onValue } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js'
+import { getDatabase, ref, update, onValue, query, orderByChild , limitToLast } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js';
 
 const firebaseConfig = {
     apiKey: "AIzaSyA_IAI09FS2BUJ6Q_LJ_eK_Ue0PcJsds-A",
@@ -20,21 +20,41 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-signInWithEmailAndPassword(auth, "huynhlienhoa2005@gmail.com", "123456")
-    .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
+export function firebase_init(getHandle,setHandle, getPlotData) {
+    signInWithEmailAndPassword(auth, "huynhlienhoa2005@gmail.com", "123456")
+        .then((userCredential) => {
+            // Signed in
+            // const user = userCredential.user;
 
-        var db = getDatabase(app);
-        var controlRef = ref(db,'giatri/control');
+            var db = getDatabase(app);
+            var controlRef = ref(db,'giatri/control');
 
-        onValue(controlRef, (snapshot) => {
-            const data = snapshot.val();
-            console.log(data);
+            onValue(controlRef, (snapshot) => {
+                const data = snapshot.val();
+                getHandle(data);
+            });
+            setHandle.f = ((key,value)=>{
+                update(controlRef,{ [key]:value });
+            });
+            setHandle.excute();
+
+            const metricRef = query(ref(db, '/giatri/push/data'), orderByChild ('Ts'), limitToLast(100));
+            onValue(metricRef,(snapshot) => {
+                const data = [];
+                snapshot.forEach((child) => {
+                    data.push(child.val());
+                });
+                getPlotData(data)
+            });
+            // onValue(metricRef, (snapshot) => {
+            //     const data = snapshot.val();
+            //     console.log(data);
+            // });
+        })
+        .catch((error) => {
+            debugger
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            alert("Login error please try again");
         });
-    })
-    .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        alert("Login error please try again");
-    });
+}

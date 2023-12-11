@@ -303,7 +303,25 @@
                     this.elements.forEach(([dom,key])=>this.callback(dom,key,this.f))
                 }
             };
-            firebase_init(control_handle,setHandle,getPlotData);
+            const setlLimit = {
+                elements: [[slider_nhietdo, 'nhietdo'], [slider_doam, 'doam']],
+                callback: (dom,key,f) =>{
+                    dom.noUiSlider.on('change', function (values) {
+                        f(key,values.map(d=>+d));
+                    });
+                },
+                f:()=>{},
+                excute: function() {
+                    this.elements.forEach(([dom,key])=>this.callback(dom,key,this.f))
+                }
+            };
+            firebase_init({
+                control:{ get: control_handle, set: setHandle},
+                limit:{ get: limit_handle, set: setlLimit},
+                plot:{get:getPlotData}
+            });
+
+            // update che do
             function control_handle({chedo, densuoi, maybom}){
                 btn_auto.checked=chedo;
                 btn_auto.disabled=false;
@@ -321,6 +339,13 @@
                     btn_water.checked=maybom;
                 }
             }
+
+            // update limit
+            function limit_handle({nhietdo, doam}){
+                slider_nhietdo.noUiSlider.set(nhietdo);
+                slider_doam.noUiSlider.set(doam);
+            }
+
             // Ve do thi
             Plotly.newPlot( plotarea, [{
                 x: [1, 2, 3, 4, 5],

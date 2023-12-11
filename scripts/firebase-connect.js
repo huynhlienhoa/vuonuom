@@ -20,36 +20,51 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-export function firebase_init(getHandle,setHandle, getPlotData) {
+
+// control : {get,set}
+// limit : {get,set}
+// plot : {get}
+export function firebase_init({control, limit, plot}) {
     signInWithEmailAndPassword(auth, "huynhlienhoa2005@gmail.com", "123456")
         .then((userCredential) => {
             // Signed in
             // const user = userCredential.user;
 
             var db = getDatabase(app);
+
+            // control
             var controlRef = ref(db,'giatri/control');
 
             onValue(controlRef, (snapshot) => {
                 const data = snapshot.val();
-                getHandle(data);
+                control.get(data);
             });
-            setHandle.f = ((key,value)=>{
+            control.set.f = ((key,value)=>{
                 update(controlRef,{ [key]:value });
             });
-            setHandle.excute();
+            control.set.excute();
 
+            // limit
+            var limitRef = ref(db,'giatri/limit');
+
+            onValue(limitRef, (snapshot) => {
+                const data = snapshot.val();
+                limit.get(data);
+            });
+            limit.set.f = ((key,value)=>{
+                update(limitRef,{ [key]:value });
+            });
+            limit.set.excute();
+
+            // plot
             const metricRef = query(ref(db, '/giatri/push/data'), orderByChild ('Ts'), limitToLast(100));
             onValue(metricRef,(snapshot) => {
                 const data = [];
                 snapshot.forEach((child) => {
                     data.push(child.val());
                 });
-                getPlotData(data)
+                plot.get(data)
             });
-            // onValue(metricRef, (snapshot) => {
-            //     const data = snapshot.val();
-            //     console.log(data);
-            // });
         })
         .catch((error) => {
             debugger

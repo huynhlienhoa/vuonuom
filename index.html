@@ -172,19 +172,21 @@
                     <h2 class="text-2xl p-4">Nhiệt độ</h2>
                     <span class="text-6xl material-symbols-outlined w-full">
                         dew_point
-                        </span>
-                            <div class="text-4xl">
-                                <span id="current_temparate">36</span>
-                                <span>°C</span>
-                            </div>
+                    </span>
+                    <div class="text-4xl flex justify-center content-center gap-x-2">
+                        <div id="current_temperate_status" class="rounded-full w-10 h-10 bg-green-900"></div>
+                        <span id="current_temperate">36</span>
+                        <span>°C</span>
+                    </div>
                 </div>
                 <div class="basis-1/3 max-w-xs border-2 text-center shadow-2xl flex flex-col rounded-xl ">
                     <h2 class="text-2xl p-4">Độ ẩm</h2>
                     <span class="text-6xl material-symbols-outlined w-full">
                         humidity_mid
                         </span>
-                        <div class="text-4xl">
-                            <span id="current_himidity">45</span>
+                        <div class="text-4xl flex justify-center content-center gap-x-2">
+                            <div id="current_humidity_status" class="rounded-full w-10 h-10 bg-green-900"></div>
+                            <span id="current_humidity">45</span>
                             <span>%</span>
                         </div>
                 </div>
@@ -224,8 +226,8 @@
 
 
                 <div class="basis-2/3 text-2xl text-center border-2 shadow-2xl rounded-xl background_site">
-                    <p class="mt-4">Đồ thị</P>
-                    <div class="w-full p-5 relative" style="height: calc(100% - 40px)">
+                    <p class="mt-4">Đồ thị Nhiệt độ, Độ ẩm theo thời gian </P>
+                    <div class="w-full p-3 relative" style="height: calc(100% - 40px - 1.5rem)">
                         <div id="plotarea" class="w-full h-full"></div>
                     </div>
 
@@ -290,6 +292,9 @@
         </script>
         <script type="module">
             import {firebase_init} from "./scripts/firebase-connect.js";
+
+            const status_color = ['bg-green-900','bg-yellow-400','bg-red-600']
+
             // connect firebase
             const setHandle = {
                 elements: [[btn_auto, 'chedo'], [btn_light, 'densuoi'], [btn_water, 'maybom']],
@@ -318,6 +323,7 @@
             firebase_init({
                 control:{ get: control_handle, set: setHandle},
                 limit:{ get: limit_handle, set: setlLimit},
+                current:{ get: current_handle},
                 plot:{get:getPlotData}
             });
 
@@ -326,7 +332,7 @@
                 btn_auto.checked=chedo;
                 btn_auto.disabled=false;
                 // auto
-                if (!chedo) {
+                if (chedo) {
                     btn_light.disabled=true;
                     btn_water.disabled=true;
                     btn_light.checked=densuoi;
@@ -344,20 +350,67 @@
             function limit_handle({nhietdo, doam}){
                 slider_nhietdo.noUiSlider.set(nhietdo);
                 slider_doam.noUiSlider.set(doam);
+                updateStatus();
             }
 
+            // update gia tri hien tai
+            function current_handle({doam, nhietdo}){
+                current_temperate.innerText=nhietdo;
+                current_humidity.innerText=doam;
+                updateStatus();
+            }
+            function updateStatusSingle(dom,value,range) {
+                if ((value>=range[1]) && (value<=range[2])){
+                    // green
+                    if (!dom.classList.contains(status_color[0])){
+                        dom.classList.remove(status_color[1]);
+                        dom.classList.remove(status_color[2]);
+                        dom.classList.add(status_color[0]);
+                    }
+                }else if ((value>=range[0]) && (value<=range[3])){
+                    // yellow
+                    if (!dom.classList.contains(status_color[1])){
+                        dom.classList.remove(status_color[0]);
+                        dom.classList.remove(status_color[2]);
+                        dom.classList.add(status_color[1]);
+                    }
+                }else {
+                    //red
+                    if (!dom.classList.contains(status_color[2])){
+                        dom.classList.remove(status_color[1]);
+                        dom.classList.remove(status_color[0]);
+                        dom.classList.add(status_color[2]);
+                    }
+                }
+            }
+            function updateStatus(){
+                updateStatusSingle(current_temperate_status,+current_temperate.innerText,slider_nhietdo.noUiSlider.get().map(d=>+d));
+                updateStatusSingle(current_humidity_status,+current_humidity.innerText,slider_doam.noUiSlider.get().map(d=>+d));
+            }
             // Ve do thi
-            Plotly.newPlot( plotarea, [{
-                x: [1, 2, 3, 4, 5],
-                y: [1, 2, 4, 8, 16] }], {
+            Plotly.newPlot( plotarea, [
+                {
+                    name:'Nhiệt độ',
+                    x: [1, 2, 3, 4, 5],
+                    y: [1, 2, 4, 8, 16]
+                },
+                {
+                    name:'Độ ẩm',
+                    x: [1, 2, 3, 4, 5],
+                    y: [4, 1, 5, 8, 10]
+                }
+            ], {
                 margin: { t: 20, b:40 } }, {responsive: true} );
             function getPlotData(data){
+                const time = data.map(d=>new Date(d.Ts));
+                const nhietdo = data.map(d=>d.nhietdo);
+                const doam = data.map(d=>d.doam);
                 const update = {
-                    x: [data.map(d=>new Date(d.Ts))],
-                    y: [data.map(d=>d.nhietdo)],
+                    x: [time,time],
+                    y: [nhietdo,doam],
                 }
-                debugger
-                Plotly.update(plotarea, update, {}, [0]);
+                console.log(update)
+                Plotly.update(plotarea, update, {}, [0,1]);
             }
         </script>
 

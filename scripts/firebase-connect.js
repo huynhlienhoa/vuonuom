@@ -24,7 +24,7 @@ const auth = getAuth(app);
 // control : {get,set}
 // limit : {get,set}
 // plot : {get}
-export function firebase_init({control, limit, plot}) {
+export function firebase_init({control, current, limit, plot}) {
     signInWithEmailAndPassword(auth, "huynhlienhoa2005@gmail.com", "123456")
         .then((userCredential) => {
             // Signed in
@@ -56,6 +56,14 @@ export function firebase_init({control, limit, plot}) {
             });
             limit.set.excute();
 
+            // current
+            var currentRef = ref(db,'giatri/set/data');
+
+            onValue(currentRef, (snapshot) => {
+                const data = snapshot.val();
+                current.get(data);
+            });
+
             // plot
             const metricRef = query(ref(db, '/giatri/push/data'), orderByChild ('Ts'), limitToLast(100));
             onValue(metricRef,(snapshot) => {
@@ -67,7 +75,6 @@ export function firebase_init({control, limit, plot}) {
             });
         })
         .catch((error) => {
-            debugger
             const errorCode = error.code;
             const errorMessage = error.message;
             alert("Login error please try again");

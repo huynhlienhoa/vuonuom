@@ -24,7 +24,7 @@ const auth = getAuth(app);
 // control : {get,set}
 // limit : {get,set}
 // plot : {get}
-export function firebase_init({control, current, limit, plot}) {
+export function firebase_init({username,pass,control, current, limit, plot}) {
     signInWithEmailAndPassword(auth, "vuonuom@gmail.com", "123456")
         .then((userCredential) => {
             // Signed in
